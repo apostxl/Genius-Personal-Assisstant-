@@ -2,7 +2,6 @@ import art
 from prettytable import PrettyTable
 
 
-
 def header_text():
 
     attention = '*******attention********'.upper()
