@@ -1,6 +1,7 @@
 from collections import UserDict
 import pickle
 from prettytable import PrettyTable
+from pathlib import Path
 
 
 class NoteName:
@@ -90,7 +91,11 @@ class NoteBook(UserDict):
         self.data[record.title.value] = record
 
 
-NOTEBOOK = NoteBook()
+with open('NotePook.bin', 'rb') as fh:
+    if Path('NoteBook.bin').stat().st_size != 0:
+        NOTEBOOK = pickle.load(fh)
+    else:
+        NOTEBOOK = NoteBook()
 
 
 def wrapper(funk):
@@ -141,9 +146,14 @@ def del_note(*args):
 
 
 def find_note(*args):
-    title = NoteName(input('Введіть назву запису яку треба видалити '))
+    contact_table = PrettyTable()
+    contact_table.field_names = ['Назва нотатку', 'Теги', 'Нотаток']
+    title = NoteName(input('Введіть назву запису яку треба знайти '))
     if title.value in NOTEBOOK.data:
-        print(f'{NOTEBOOK.data[title.value]}')
+        contact_table.add_row([f'{title.value}',
+                               ', '.join(NOTEBOOK.data[title.value].tags),
+                               f'{NOTEBOOK.data[title.value].note.value}'], divider=True)
+        print(contact_table)
     else:
         print(f'Запису "{title}" не знайдено')
 
@@ -179,7 +189,7 @@ def help_table(*args):
 
 
 def exit(*args):
-    print('''Good Bye''')
+    return '''Good Bye'''
 
 
 COMMANDS = {add_note: 'add',
@@ -214,6 +224,9 @@ def main():
         if command == exit:
             print(exit())
             flag = False
+
+    with open('NotePook.bin', 'wb') as fh:
+        pickle.dump(NOTEBOOK, fh)
 
 
 if __name__ == '__main__':
