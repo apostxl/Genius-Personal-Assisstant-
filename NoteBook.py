@@ -149,29 +149,37 @@ def find_note(*args):
 
 
 def show_notes(*args):
+    contact_table = PrettyTable()
+    contact_table.field_names = ['Назва нотатку', 'Теги', 'Нотаток']
     if not NOTEBOOK.data:
         print('В записній книзі немає записів')
     else:
         for values in NOTEBOOK.data.values():
-            print(values)
+            contact_table.add_row([f'{values.title.value}',
+                                   ', '.join(values.tags),
+                                   f'{values.note.value}'], divider=True)
+        print(contact_table)
 
 
 def no_command(*args):
-    return '''Невідома команда, спробуйте ща раз'''
+    print('''Невідома команда, спробуйте ща раз''')
 
 
-def help(*args):
-    help_table = PrettyTable()
-    help_table.field_names = (['Команда', 'Що виконує команда'])
-    help_table.add_row([
-        ['add', 'додає записи в книгу нотатків'],
-        ['add', 'додає записи в книгу нотатків']
-        ['add', 'додає записи в книгу нотатків']
-        ['add', 'додає записи в книгу нотатків']])
-    print(help_table)
+def help_table(*args):
+    helper = PrettyTable()
+    helper.field_names = ['Команда', 'Що виконує команда']
+    helper.add_row(['add', 'додає записи в книгу нотатків'], divider=True)
+    helper.add_row(['delete', 'видаляє записи з книги нотатків'], divider=True)
+    helper.add_row(['change', 'зиінює запис в книзі нотатків'], divider=True)
+    helper.add_row(['show all', 'виводить зміст книги нотатків'], divider=True)
+    helper.add_row(['find', 'шукає записи в книгу нотатків'], divider=True)
+    helper.add_row(['help', 'вивід списку команд'])
+
+    print(helper)
+
 
 def exit(*args):
-    return '''Good Bye'''
+    print('''Good Bye''')
 
 
 COMMANDS = {add_note: 'add',
@@ -180,7 +188,7 @@ COMMANDS = {add_note: 'add',
             change_note: 'change',
             show_notes: 'show all',
             find_note: 'find',
-            help: 'help'
+            help_table: 'help'
             }
 
 
