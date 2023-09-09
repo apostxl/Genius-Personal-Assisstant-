@@ -91,8 +91,8 @@ class NoteBook(UserDict):
         self.data[record.title.value] = record
 
 
-with open('NotePook.bin', 'rb') as fh:
-    if Path('NoteBook.bin').stat().st_size != 0:
+with open('NOTEBOOK.bin', 'rb') as fh:
+    if Path('NOTEBOOK.bin').stat().st_size != 0:
         NOTEBOOK = pickle.load(fh)
     else:
         NOTEBOOK = NoteBook()
@@ -225,7 +225,7 @@ def main():
             print(exit())
             flag = False
 
-    with open('NotePook.bin', 'wb') as fh:
+    with open('NOTEBOOK.bin', 'wb') as fh:
         pickle.dump(NOTEBOOK, fh)
 
 
