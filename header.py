@@ -56,5 +56,5 @@ def help():
 
 
 # header_text()
-inf_table()
-help()
+# inf_table()
+# help()
