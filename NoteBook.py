@@ -1,5 +1,6 @@
 from collections import UserDict
 import pickle
+from prettytable import PrettyTable
 
 
 class NoteName:
@@ -92,23 +93,120 @@ class NoteBook(UserDict):
 NOTEBOOK = NoteBook()
 
 
-def add_note(*args):
-    title = NoteName(input('Введіть назву запису: '))
-    note = input('Введіть текст запису: ')
-    tag = Tag(input('Введіть тег: '))
-    note_rec = Record(title)
-    note_rec.add_note(Note(note))
-    if tag.value:
-        note_rec.add_tag(tag)
+def wrapper(funk):
+    def inner(*args):
+        try:
+            return funk(*args)
+        except ValueError as e:
+            print(e)
 
-    NOTEBOOK.add_record(note_rec)
-    print(NOTEBOOK)
+    return inner
+
+
+def add_note(*args):
+    title = NoteName(input('Введіть назву нотатку: '))
+    if title.value in NOTEBOOK.data:
+        print(f'Нотаток {title.value} вже існує. Виберыть іншу назву для нотатка!!')
+    else:
+        note = input('Введіть текст нотатку: ')
+        tag = Tag(input('Введіть тег: '))
+
+        note_rec = Record(title)
+        note_rec.add_note(Note(note))
+
+        if tag.value:
+            note_rec.add_tag(tag)
+
+        if note_rec.title.value not in NOTEBOOK.data:
+            NOTEBOOK.add_record(note_rec)
+
+        print(f'Нотаток {note_rec.title.value} додано до книги нотатків')
+
 
 def change_note(*args):
     title = NoteName(input('Введіть назву запису яку треба змінити: '))
-    if title.value in NOTEBOOK:
+    if title.value in NOTEBOOK.data:
+        note = input('Введіть текст запису: ')
+        NOTEBOOK.data[title.value].add_note(Note(note))
+    else:
+        print(f'Запису "{title}" не знайдено')
 
 
+def del_note(*args):
+    title = NoteName(input('Введіть назву запису яку треба видалити '))
+    if title.value in NOTEBOOK.data:
+        note = NOTEBOOK.data.pop(title.value)
+    else:
+        print(f'Запису "{title}" не знайдено')
 
-add_note()
-print(NOTEBOOK)
+
+def find_note(*args):
+    title = NoteName(input('Введіть назву запису яку треба видалити '))
+    if title.value in NOTEBOOK.data:
+        print(f'{NOTEBOOK.data[title.value]}')
+    else:
+        print(f'Запису "{title}" не знайдено')
+
+
+def show_notes(*args):
+    if not NOTEBOOK.data:
+        print('В записній книзі немає записів')
+    else:
+        for values in NOTEBOOK.data.values():
+            print(values)
+
+
+def no_command(*args):
+    return '''Невідома команда, спробуйте ща раз'''
+
+
+def help(*args):
+    help_table = PrettyTable()
+    help_table.field_names = (['Команда', 'Що виконує команда'])
+    help_table.add_row([
+        ['add', 'додає записи в книгу нотатків'],
+        ['add', 'додає записи в книгу нотатків']
+        ['add', 'додає записи в книгу нотатків']
+        ['add', 'додає записи в книгу нотатків']])
+    print(help_table)
+
+def exit(*args):
+    return '''Good Bye'''
+
+
+COMMANDS = {add_note: 'add',
+            exit: ['exit', 'close', 'good bye'],
+            del_note: 'delete',
+            change_note: 'change',
+            show_notes: 'show all',
+            find_note: 'find',
+            help: 'help'
+            }
+
+
+def command_handler(text):
+    for command, kword in COMMANDS.items():
+        if isinstance(kword, str):
+            if text.lower().startswith(kword):
+                return command, None
+        elif isinstance(kword, list):
+            if text.strip().lower() in kword:
+                return command, None
+    return no_command, None
+
+
+def main():
+    flag = True
+    while flag:
+        user_input = input('>>>')
+        command, data = command_handler(user_input)
+
+        command(data)
+
+        if command == exit:
+            print(exit())
+            flag = False
+
+
+if __name__ == '__main__':
+    main()
