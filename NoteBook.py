@@ -109,12 +109,12 @@ def wrapper(funk):
 
 
 def add_note(*args):
-    title = NoteName(input('Введіть назву нотатку: '))
+    title = NoteName(input('Введіть назву нотатку >>> '))
     if title.value in NOTEBOOK.data:
-        print(f'Нотаток {title.value} вже існує. Виберыть іншу назву для нотатка!!')
+        print(f'Нотаток "{title.value}" вже існує. Виберыть іншу назву для нотатка!!!')
     else:
-        note = input('Введіть текст нотатку: ')
-        tag = Tag(input('Введіть тег: '))
+        note = input('Введіть текст нотатку >>> ')
+        tag = Tag(input('Введіть тег >>> '))
 
         note_rec = Record(title)
         note_rec.add_note(Note(note))
@@ -125,72 +125,82 @@ def add_note(*args):
         if note_rec.title.value not in NOTEBOOK.data:
             NOTEBOOK.add_record(note_rec)
 
-        print(f'Нотаток {note_rec.title.value} додано до книги нотатків')
+        print(f'Нотаток "{note_rec.title.value}" додано до книги нотатків :)')
 
 
 def change_note(*args):
-    title = NoteName(input('Введіть назву запису яку треба змінити: '))
+    title = NoteName(input('Введіть назву нотатку, який треба змінити >>> '))
     if title.value in NOTEBOOK.data:
-        note = input('Введіть текст запису: ')
+        note = input('Введіть текст нотатку >>> ')
         NOTEBOOK.data[title.value].add_note(Note(note))
+        print(f'Нотаток "{title.value}" успішно змінено :)')
     else:
-        print(f'Запису "{title}" не знайдено')
+        print(f'Нотатка "{title}" не знайдено!!!')
 
 
 def add_tag(*args):
-    title = NoteName(input('Введіть назву запису який треба до якого треба додати тег '))
+    title = NoteName(input('Введіть назву нотатка до якого треба додати ТЕГ >>> '))
     if title.value in NOTEBOOK.data:
-        tag = Tag(input('Введіть тег: '))
+        tag = Tag(input('Введіть ТЕГ >>> '))
         tag_list = [i.value for i in NOTEBOOK.data[title.value].tags]
         if tag.value not in tag_list:
             NOTEBOOK.data[title.value].add_tag(tag)
-            print(f'Tag "{tag.value}" додано до списку тегів')
+            print(f'ТЕГ "{tag.value}" успішно додано до списку тегів :)')
         else:
-            print(f'Tag "{tag.value}" вже є у списку тегів')
+            print(f'Tag "{tag.value}" вже є у списку тегів!!!')
     else:
-        print(f'Нотаток "{title}" не знайдено')
+        print(f'Нотаток "{title}" не знайдено!!!')
 
 
 def del_note(*args):
-    title = NoteName(input('Введіть назву запису яку треба видалити '))
+    title = NoteName(input('Введіть назву нотатку, який треба видалити >>> '))
     if title.value in NOTEBOOK.data:
         note = NOTEBOOK.data.pop(title.value)
-        print(f'Нотаток "{title}" видалено')
+        print(f'Нотаток "{title}" успішно видалено :)')
     else:
-        print(f'Нотаток "{title}" не знайдено')
+        print(f'Нотаток "{title}" не знайдено!!!')
 
 
 def find_note(*args):
     contact_table = PrettyTable()
     contact_table.field_names = ['Назва нотатку', 'Теги', 'Нотаток']
-    title = NoteName(input('Введіть назву запису який треба знайти '))
+    title = NoteName(input('Введіть назву нотатку, який треба знайти >>> '))
     if title.value in NOTEBOOK.data:
         tags_list = [i.value for i in NOTEBOOK.data[title.value].tags]
         contact_table.add_row([f'{title.value}',
                                ', '.join(tags_list),
                                f'{NOTEBOOK.data[title.value].note.value}'], divider=True)
+
+        contact_table.max_width['Нотаток'] = 100
         print(contact_table)
     else:
-        print(f'Запису "{title}" не знайдено')
+        print(f'Нотаток "{title}" не знайдено!!!')
 
 def find_by_tag(*args):
     contact_table = PrettyTable()
     contact_table.field_names = ['Назва нотатку', 'Теги', 'Нотаток']
-    tag = Tag(input('Введіть тег для пошуку нотітків >>> '))
+    tag = Tag(input('Введіть ТЕГ для пошуку нотітків >>> '))
+    counter = 0
     for values in NOTEBOOK.data.values():
         tag_list = [i.value for i in values.tags]
         if tag.value in [i.value for i in values.tags]:
             contact_table.add_row([f'{values.title.value}',
                                    ', '.join(tag_list),
                                    f'{values.note.value}'], divider=True)
-    print(contact_table)
+
+            contact_table.max_width['Нотаток'] = 100
+            print(contact_table)
+            counter += 1
+    if not counter:
+        print(f'Тегу {tag.value} не знайдено!!!')
+
 
 
 def show_notes(*args):
     contact_table = PrettyTable()
     contact_table.field_names = ['Назва нотатку', 'Теги', 'Нотаток']
     if not NOTEBOOK.data:
-        print('В записній книзі немає записів')
+        print('В нотатнику немає !!!')
     else:
         for values in NOTEBOOK.data.values():
             tag_list = [str(i) for i in values.tags]
@@ -198,29 +208,32 @@ def show_notes(*args):
                                    ', '.join(tag_list),
                                    f'{values.note.value}'], divider=True)
 
+        contact_table.max_width['Нотаток'] = 100
         print(contact_table)
 
 
-
 def no_command(*args):
-    print('''Невідома команда, спробуйте ща раз''')
+    print("Невідома команда, спробуйте ща раз!!!")
 
 
 def help_table(*args):
     helper = PrettyTable()
     helper.field_names = ['Команда', 'Що виконує команда']
-    helper.add_row(['add', 'додає записи в книгу нотатків'], divider=True)
-    helper.add_row(['delete', 'видаляє записи з книги нотатків'], divider=True)
-    helper.add_row(['change', 'зиінює запис в книзі нотатків'], divider=True)
-    helper.add_row(['show all', 'виводить зміст книги нотатків'], divider=True)
-    helper.add_row(['find', 'шукає записи в книгу нотатків'], divider=True)
-    helper.add_row(['help', 'вивід списку команд'])
+    helper.add_row(['add', 'додти запис в книгу нотатків'], divider=True)
+    helper.add_row(['delete', 'видалити запис з книги нотатків'], divider=True)
+    helper.add_row(['change', 'зиінити запис в книзі нотатків'], divider=True)
+    helper.add_row(['show all', 'вивести зміст книги нотатків'], divider=True)
+    helper.add_row(['find', 'знайти запис в книзі нотатків'], divider=True)
+    helper.add_row(['tag', 'додати ТЕГ до запису в книзі нотатків'], divider=True)
+    helper.add_row(['tg find', 'знайти записи в книзі нотатків за тегом'], divider=True)
+    helper.add_row(['help', 'вивести списку команд'], divider=True)
+    helper.add_row(['exit, close, good bye', 'завершити роботу з нотатником'])
 
     print(helper)
 
 
 def exit(*args):
-    return '''Good Bye'''
+    return "До побачння!!! Гарного Вам Дня!!!"
 
 
 COMMANDS = {add_note: 'add',
@@ -247,6 +260,9 @@ def command_handler(text):
 
 
 def main():
+
+    print('''Привіт!!! Це ваш особистий нотатник!!!
+Якщо ви увійшли в перший раз, введіть 'help' та натисніть Enter для ознайомдення з можливостями додатка :)''')
     flag = True
     while flag:
         user_input = input('>>>')
