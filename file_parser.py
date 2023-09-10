@@ -33,6 +33,7 @@ AMR_AUDIO = []
 ZIP_ARCHIVES = []
 GZ_ARCHIVES = []
 TAR_ARCHIVES = []
+RAR_ARCHIVES = []
 
 MY_OTHER = []
 
@@ -66,6 +67,7 @@ REGISTER_EXTENSION = {
     "ZIP": ZIP_ARCHIVES,
     "GZ": GZ_ARCHIVES,
     "TAR": TAR_ARCHIVES,
+    "RAR": RAR_ARCHIVES
 }
 
 FOLDERS = []
@@ -114,42 +116,43 @@ def scan(folder: Path) -> None:
 
 
 if __name__ == "__main__":
-    folder_to_scan = sys.argv[1]
-    print(f"Start in folder {folder_to_scan}")
-    scan(Path(folder_to_scan))
+    pass
+    # folder_to_scan = sys.argv[1]
+    # print(f"Start in folder {folder_to_scan}")
+    # scan(Path(folder_to_scan))
 
-    # зображення
-    print(f"Images jpeg: {JPEG_IMAGES}")
-    print(f"Images jpg: {JPG_IMAGES}")
-    print(f"Images png: {PNG_IMAGES}")
-    print(f"Images svg: {SVG_IMAGES}")
+    # # зображення
+    # print(f"Images jpeg: {JPEG_IMAGES}")
+    # print(f"Images jpg: {JPG_IMAGES}")
+    # print(f"Images png: {PNG_IMAGES}")
+    # print(f"Images svg: {SVG_IMAGES}")
 
-    # відео файли
-    print(f"Video avi: {AVI_VIDEO}")
-    print(f"Video mp4: {MP4_VIDEO}")
-    print(f"Video mov: {MOV_VIDEO}")
-    print(f"Video mkv: {MKV_VIDEO}")
-    # документи
-    print(f"Documents doc: {DOC_DOCUMENTS}")
-    print(f"Documents docx: {DOCX_DOCUMENTS}")
-    print(f"Documents txt: {TXT_DOCUMENTS}")
-    print(f"Documents pdf: {PDF_DOCUMENTS}")
-    print(f"Documents xlsx: {XLSX_DOCUMENTS}")
-    print(f"Documents xls: {XLS_DOCUMENTS}")
-    print(f"Documents pptx: {PPTX_DOCUMENTS}")
-    print(f"Documents rtf: {RTF_DOCUMENTS}")
-    # музика
-    print(f"Audio mp3: {MP3_AUDIO}")
-    print(f"Audio ogg: {OGG_AUDIO}")
-    print(f"Audio wav: {WAV_AUDIO}")
-    print(f"Audio amr: {AMR_AUDIO}")
-    # архіви
-    print(f"Archives zip: {ZIP_ARCHIVES}")
-    print(f"Archives gz: {GZ_ARCHIVES}")
-    print(f"Archives tar: {TAR_ARCHIVES}")
+    # # відео файли
+    # print(f"Video avi: {AVI_VIDEO}")
+    # print(f"Video mp4: {MP4_VIDEO}")
+    # print(f"Video mov: {MOV_VIDEO}")
+    # print(f"Video mkv: {MKV_VIDEO}")
+    # # документи
+    # print(f"Documents doc: {DOC_DOCUMENTS}")
+    # print(f"Documents docx: {DOCX_DOCUMENTS}")
+    # print(f"Documents txt: {TXT_DOCUMENTS}")
+    # print(f"Documents pdf: {PDF_DOCUMENTS}")
+    # print(f"Documents xlsx: {XLSX_DOCUMENTS}")
+    # print(f"Documents xls: {XLS_DOCUMENTS}")
+    # print(f"Documents pptx: {PPTX_DOCUMENTS}")
+    # print(f"Documents rtf: {RTF_DOCUMENTS}")
+    # # музика
+    # print(f"Audio mp3: {MP3_AUDIO}")
+    # print(f"Audio ogg: {OGG_AUDIO}")
+    # print(f"Audio wav: {WAV_AUDIO}")
+    # print(f"Audio amr: {AMR_AUDIO}")
+    # # архіви
+    # print(f"Archives zip: {ZIP_ARCHIVES}")
+    # print(f"Archives gz: {GZ_ARCHIVES}")
+    # print(f"Archives tar: {TAR_ARCHIVES}")
 
-    print(f"Types of files in folder: {EXTENSION}")
-    print(f"Unknown files of types: {UNKNOWN}")
-    print(f"MY_OTHER: {MY_OTHER}")
+    # print(f"Types of files in folder: {EXTENSION}")
+    # print(f"Unknown files of types: {UNKNOWN}")
+    # print(f"MY_OTHER: {MY_OTHER}")
 
-    print(FOLDERS)
+    # print(FOLDERS)
