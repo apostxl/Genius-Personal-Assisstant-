@@ -68,11 +68,11 @@ class Record:
         self.tags = [] if tag is None else [tag]
         self.note = note
 
-    def add_note(self, note):
+    def add_note(self, note: str):
         self.note = note
 
-    def add_tag(self, tag):
-        self.tags.append(tag.value)
+    def add_tag(self, tag: Tag):
+        self.tags.append(tag)
 
     def __str__(self):
         return f'{str(self.title)}, {(str(self.tags))}, {str(self.note)}'
@@ -137,25 +137,53 @@ def change_note(*args):
         print(f'Запису "{title}" не знайдено')
 
 
+def add_tag(*args):
+    title = NoteName(input('Введіть назву запису який треба до якого треба додати тег '))
+    if title.value in NOTEBOOK.data:
+        tag = Tag(input('Введіть тег: '))
+        tag_list = [i.value for i in NOTEBOOK.data[title.value].tags]
+        if tag.value not in tag_list:
+            NOTEBOOK.data[title.value].add_tag(tag)
+            print(f'Tag "{tag.value}" додано до списку тегів')
+        else:
+            print(f'Tag "{tag.value}" вже є у списку тегів')
+    else:
+        print(f'Нотаток "{title}" не знайдено')
+
+
 def del_note(*args):
     title = NoteName(input('Введіть назву запису яку треба видалити '))
     if title.value in NOTEBOOK.data:
         note = NOTEBOOK.data.pop(title.value)
+        print(f'Нотаток "{title}" видалено')
     else:
-        print(f'Запису "{title}" не знайдено')
+        print(f'Нотаток "{title}" не знайдено')
 
 
 def find_note(*args):
     contact_table = PrettyTable()
     contact_table.field_names = ['Назва нотатку', 'Теги', 'Нотаток']
-    title = NoteName(input('Введіть назву запису яку треба знайти '))
+    title = NoteName(input('Введіть назву запису який треба знайти '))
     if title.value in NOTEBOOK.data:
+        tags_list = [i.value for i in NOTEBOOK.data[title.value].tags]
         contact_table.add_row([f'{title.value}',
-                               ', '.join(NOTEBOOK.data[title.value].tags),
+                               ', '.join(tags_list),
                                f'{NOTEBOOK.data[title.value].note.value}'], divider=True)
         print(contact_table)
     else:
         print(f'Запису "{title}" не знайдено')
+
+def find_by_tag(*args):
+    contact_table = PrettyTable()
+    contact_table.field_names = ['Назва нотатку', 'Теги', 'Нотаток']
+    tag = Tag(input('Введіть тег для пошуку нотітків >>> '))
+    for values in NOTEBOOK.data.values():
+        tag_list = [i.value for i in values.tags]
+        if tag.value in [i.value for i in values.tags]:
+            contact_table.add_row([f'{values.title.value}',
+                                   ', '.join(tag_list),
+                                   f'{values.note.value}'], divider=True)
+    print(contact_table)
 
 
 def show_notes(*args):
@@ -165,10 +193,13 @@ def show_notes(*args):
         print('В записній книзі немає записів')
     else:
         for values in NOTEBOOK.data.values():
+            tag_list = [str(i) for i in values.tags]
             contact_table.add_row([f'{values.title.value}',
-                                   ', '.join(values.tags),
+                                   ', '.join(tag_list),
                                    f'{values.note.value}'], divider=True)
+
         print(contact_table)
+
 
 
 def no_command(*args):
@@ -198,6 +229,8 @@ COMMANDS = {add_note: 'add',
             change_note: 'change',
             show_notes: 'show all',
             find_note: 'find',
+            find_by_tag: 'tg find',
+            add_tag: 'tag',
             help_table: 'help'
             }
 
