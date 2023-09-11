@@ -17,21 +17,21 @@ def inf_table():
     app_table.add_row(['1', 'ContactBook',
                        'Книга контактів для зберігання телефонів, емейлів, днів народження та іншої корисної інформації',
                        'Для початку роботи натисніть 1'], divider=True)
-    app_table.add_row(['2', 'NoteBook',
+    app_table.add_row(['2', 'NoteBook.bin',
                        'Ззаписник в який можна додавати необхідні повсякденні записи',
                        'Для початку роботи натисніть 2'], divider=True)
     app_table.add_row(['3', 'FileSorter',
                        'Дозволяє відсортувати будь-яку теку з файлами', 'Для початку роботи натисніть 3'],
                       divider=True)
     app_table.add_row(['4', 'GPT навігатор',
-                       'Допомагає витягти будь яку інформацію збережену в AddressBook чи NoteBook',
+                       'Допомагає витягти будь яку інформацію збережену в AddressBook чи NoteBook.bin',
                        'Для початку роботи натисніть 4'], divider=True)
     app_table.add_row(['5', 'help',
                        'Інформація по роботі з додатком', 'Для початку роботи натисніть 5'])
 
     app_table.max_width['Інформація'] = 60
 
-    print(app_table)
+    print("\033[36m{}\033[0m".format(app_table))
 
 
 def help():
@@ -43,7 +43,7 @@ def help():
                                        'delete : видяляє контак зі списку\n'
                                        'show : показує список контактів'
                                        'close : закриває книгу контактів'], divider=True)
-    help_table.add_row(['NoteBook', 'add : додає апис до записника\n'
+    help_table.add_row(['NoteBook.bin', 'add : додає апис до записника\n'
                                     'change : змінє зінює запис в записнику\n'
                                     'delete : видяляє запис зі списку записів\n'
                                     'show : показує список всіх записів'
@@ -52,9 +52,7 @@ def help():
 
 
     help_table.align['Список команд та їх фунуціонал'] = 'l'
-    print(help_table)
+    print("\033[33m{}\033[0m".format(help_table))
 
 
-# header_text()
-# inf_table()
-# help()
+
