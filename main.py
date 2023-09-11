@@ -1,3 +1,14 @@
+from prettytable import PrettyTable
+from colorama import Fore, Style  # Импортируем нужные стили из библиотеки colorama
+
+# Замените ваши цветовые escape-последовательности ANSI на стили colorama
+P = Fore.MAGENTA  # Purple
+B = Style.BRIGHT  # Bold
+G = Fore.LIGHTBLUE_EX  # Light Blue
+T = Fore.RED
+RES = Style.RESET_ALL  # Сброс форматирования
+
+
 class Note:
     def __init__(self, text, tags=None):
         self.text = text
@@ -53,10 +64,14 @@ note_manager = NoteManager()
 
 
 def add_note(*args):
-    text = args[0]
-    tags = args[1:]
-    note_manager.add_note(text, tags)
-    return "Note added successfully"
+    text = ' '.join(args)
+    if not text:
+        return f"{T}{B}Error: Nothing to add. Please provide text for the note.{RES}"
+
+    tags = [word for word in text.split() if word.startswith("#")]
+    text_without_tags = ' '.join(word for word in text.split() if not word.startswith("#"))
+    note_manager.add_note(text_without_tags, tags)
+    return f"{G}{B}Note added successfully{RES}"
 
 
 def search_notes_by_tag(*args):
@@ -65,9 +80,9 @@ def search_notes_by_tag(*args):
     if matching_notes:
         result = []
         for i, note in enumerate(matching_notes, 1):
-            result.append(f"Note {i}:\nText: {note.text}\nTags: {' '.join(note.tags)}\n")
+            result.append(f"{G}{B}Note {i}:\nText: {note.text}\nTags: {' '.join(note.tags)}\n{RES}")
         return "\n".join(result)
-    return "No matching notes found"
+    return f"{T}{B}Tag not found{RES}"
 
 
 def search_notes_by_text(*args):
@@ -76,50 +91,54 @@ def search_notes_by_text(*args):
     if matching_notes:
         result = []
         for i, note in enumerate(matching_notes, 1):
-            result.append(f"Note {i}:\nText: {note.text}\nTags: {' '.join(note.tags).replace('|', ' ')}\n")
+            result.append(f"{G}{B}Note {i}:\nText: {note.text}\nTags: {' '.join(note.tags).replace('|', ' ')}\n{RES}")
         return "\n".join(result)
-    return "No matching notes found"
-
+    return f"{T}{B}Text not found{RES}"
 
 
 def edit_note(*args):
     try:
-        index = int(args[0])
-        new_text = args[1]
-        note_manager.edit_note(index, new_text)
-        return f"Note {index} updated successfully"
+        index = int(args[0]) - 1
+        if 0 <= index < len(note_manager.get_all_notes()):
+            new_text = ' '.join(args[1:])
+            note_manager.edit_note(index, new_text)
+            return f"{G}{B}Note {index + 1} updated successfully{RES}"
+        else:
+            return f"{T}{B}Note not found with index {index + 1}{RES}"
     except (IndexError, ValueError):
-        return "Invalid input. Please provide a valid index and new text."
+        return f"{T}{B}Invalid input. Please provide a valid index and new text.{RES}"
 
 
 def delete_note(*args):
     try:
         index = int(args[0])
-        note_manager.delete_note(index)
-        return f"Note {index} deleted successfully"
+        if 0 <= index < len(note_manager.get_all_notes()):
+            note_manager.delete_note(index)
+            return f"{G}{B}Note {index} deleted successfully{RES}"
+        else:
+            return f"{T}{B}Note not found with index {index}{RES}"
     except (IndexError, ValueError):
-        return "Invalid input. Please provide a valid index."
-
-
-def sort_notes_by_tags(*args):
-    tag = args[0]
-    sorted_notes = note_manager.sort_notes_by_tags(tag)
-    if sorted_notes:
-        result = []
-        for i, note in enumerate(sorted_notes, 1):
-            result.append(f"Note {i}:\nText: {note.text}\nTags: {' '.join(note.tags).replace('|', ' ')}\n")
-        return "\n".join(result)
-    return "No notes found with the specified tag."
+        return f"{T}{B}Invalid input. Please provide a valid index.{RES}"
 
 
 def get_all_notes(*args):
     notes = note_manager.get_all_notes()
     if notes:
-        result = []
+        table = PrettyTable()
+        table.field_names = [f"{P}{B}Note{RES}", f"{G}{B}Text{RES}", f"{T}{B}Tags{RES}"]
         for i, note in enumerate(notes, 1):
-            result.append(f"Note {i}:\nText: {note.text}\nTags: {' '.join(note.tags).replace('|', ' ')}\n")
-        return "\n".join(result)
+            tags = ' '.join(tag for tag in note.tags if tag.startswith("#"))
+            table.add_row([f"{P}{B}{i}{RES}", f"{G}{B}{note.text}{RES}", f"{T}{B}{tags}{RES}"])
+        return str(table)
     return "No notes found."
+
+
+def no_command(*args):
+    return f'{T}{B}Unknown command, try again{RES}' if isinstance(args, list) else ''
+
+
+def exit(*args):
+    return '''Good Bye'''
 
 
 COMMANDS = {
@@ -128,14 +147,11 @@ COMMANDS = {
     search_notes_by_text: 'search_notes_by_text',
     edit_note: 'edit_note',
     delete_note: 'delete_note',
-    sort_notes_by_tags: 'sort_notes_by_tags',
-    get_all_notes: 'get_all_notes'
+    get_all_notes: 'get_all_notes',
+    no_command: None,
+    exit: ['exit', 'close', 'good bye'],
 
 }
-
-
-def no_command(*args):
-    return '''Unknown command, try again'''
 
 
 def command_handler(text):
@@ -146,10 +162,33 @@ def command_handler(text):
         elif isinstance(kword, list):
             if text.strip().lower() in kword:
                 return command, []
-    return no_command, None
+    return no_command, []
+
+
+def help(*args):
+    return f'''
+    {P}{B}Додавання нотатки:{RES} {G}{B}add_note ТЕКСТ #ТЕГ1 #ТЕГ2 ...{RES}
+    {P}{B}Пошук нотаток за тегами:{RES}  {G}{B}search_notes_by_tag #ТЕГ{RES}
+    {P}{B}Пошук нотаток за текстом:{RES}  {G}{B}search_notes_by_text ТЕКСТ{RES}
+    {P}{B}Редагування нотатки:{RES}  {G}{B}edit_note ІНДЕКС НОВИЙ_ТЕКСТ{RES}
+    {P}{B}Видалення нотатки:{RES}   {G}{B}delete_note ІНДЕКС{RES}
+    {P}{B}Отримання списку всіх нотаток:{RES}  {G}{B}get_all_notes{RES}
+    {P}{B}Приклади:{RES}
+
+    {P}{B}Додати замітку:{RES} {G}{B}add_note Meeting with John Doe at 2 PM #meeting #important{RES} 
+    {P}{B}Пошук за тегами:{RES} {G}{B}search_notes_by_tag #meeting{RES} 
+    {P}{B}Пошук за текстом:{RES} {G}{B}search_notes_by_text Meeting with John Doe at 2 PM{RES} 
+    {P}{B}Редагувати нотатку за номером:{RES} {G}{B}edit_note 1 Updated meeting with John Doe at 3 PM{RES} 
+    {P}{B}Видалити нотатку за номером:{RES} {G}{B}delete_note 1{RES} 
+    {P}{B}Отримати список усіх нотаток:{RES} {G}{B}get_all_notes{RES} 
+    "{G}{B}good bye{RES}", "{G}{B}close{RES}", "{G}{B}exit{RES}" {P}{B}по будь-якій з цих команд бот завершує свою 
+    роботу після того, як виведе у консоль{RES} 
+    "{G}{B}Good bye!{RES}" '''
+
 
 
 def main():
+    print(help())
     while True:
         user_input = input('>>>')
         command, data = command_handler(user_input)
@@ -163,6 +202,8 @@ def main():
             print(result)
         else:
             print("Command failed. Please try again.")
+        if command == exit:
+            break
 
 
 if __name__ == '__main__':
