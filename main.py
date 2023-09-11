@@ -1,3 +1,6 @@
+from prettytable import PrettyTable
+
+
 class Note:
     def __init__(self, text, tags=None):
         self.text = text
@@ -53,9 +56,10 @@ note_manager = NoteManager()
 
 
 def add_note(*args):
-    text = args[0]
-    tags = args[1:]
-    note_manager.add_note(text, tags)
+    text = ' '.join(args)
+    tags = [word for word in text.split() if word.startswith("#")]
+    text_without_tags = ' '.join(word for word in text.split() if not word.startswith("#"))
+    note_manager.add_note(text_without_tags, tags)
     return "Note added successfully"
 
 
@@ -79,7 +83,6 @@ def search_notes_by_text(*args):
             result.append(f"Note {i}:\nText: {note.text}\nTags: {' '.join(note.tags).replace('|', ' ')}\n")
         return "\n".join(result)
     return "No matching notes found"
-
 
 
 def edit_note(*args):
@@ -115,11 +118,18 @@ def sort_notes_by_tags(*args):
 def get_all_notes(*args):
     notes = note_manager.get_all_notes()
     if notes:
-        result = []
+        table = PrettyTable()
+        table.field_names = ["Note", "Text", "Tags"]
         for i, note in enumerate(notes, 1):
-            result.append(f"Note {i}:\nText: {note.text}\nTags: {' '.join(note.tags).replace('|', ' ')}\n")
-        return "\n".join(result)
+            tags = ' '.join(tag for tag in note.tags if tag.startswith("#"))
+            table.add_row([i, note.text, tags])
+        table.align = "l"
+        return str(table)
     return "No notes found."
+
+
+def no_command(*args):
+    return 'Unknown command, try again' if isinstance(args, list) else ''
 
 
 COMMANDS = {
@@ -129,13 +139,10 @@ COMMANDS = {
     edit_note: 'edit_note',
     delete_note: 'delete_note',
     sort_notes_by_tags: 'sort_notes_by_tags',
-    get_all_notes: 'get_all_notes'
+    get_all_notes: 'get_all_notes',
+    no_command: None
 
 }
-
-
-def no_command(*args):
-    return '''Unknown command, try again'''
 
 
 def command_handler(text):
@@ -146,7 +153,7 @@ def command_handler(text):
         elif isinstance(kword, list):
             if text.strip().lower() in kword:
                 return command, []
-    return no_command, None
+    return no_command, []
 
 
 def main():
