@@ -52,9 +52,7 @@ def help():
 
 
     help_table.align['Список команд та їх фунуціонал'] = 'l'
-    print("\033[32m{}\033[0m".format(help_table))
+    print("\033[33m{}\033[0m".format(help_table))
 
 
-# header_text()
-inf_table()
-help()
+
