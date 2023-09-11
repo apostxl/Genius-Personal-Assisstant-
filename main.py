@@ -166,23 +166,25 @@ def command_handler(text):
 
 
 def help(*args):
-    return '''
-    Додавання нотатки: add_note ТЕКСТ #ТЕГ1 #ТЕГ2 ...
-    Пошук нотаток за тегами:  search_notes_by_tag #ТЕГ
-    Пошук нотаток за текстом:  search_notes_by_text ТЕКСТ
-    Редагування нотатки:  edit_note ІНДЕКС НОВИЙ_ТЕКСТ
-    Видалення нотатки:   delete_note ІНДЕКС
-    Отримання списку всіх нотаток:  get_all_notes
-    Приклади:
+    return f'''
+    {P}{B}Додавання нотатки:{RES} {G}{B}add_note ТЕКСТ #ТЕГ1 #ТЕГ2 ...{RES}
+    {P}{B}Пошук нотаток за тегами:{RES}  {G}{B}search_notes_by_tag #ТЕГ{RES}
+    {P}{B}Пошук нотаток за текстом:{RES}  {G}{B}search_notes_by_text ТЕКСТ{RES}
+    {P}{B}Редагування нотатки:{RES}  {G}{B}edit_note ІНДЕКС НОВИЙ_ТЕКСТ{RES}
+    {P}{B}Видалення нотатки:{RES}   {G}{B}delete_note ІНДЕКС{RES}
+    {P}{B}Отримання списку всіх нотаток:{RES}  {G}{B}get_all_notes{RES}
+    {P}{B}Приклади:{RES}
 
-    Додати замітку: add_note Meeting with John Doe at 2 PM #meeting #important 
-    Пошук за тегами: search_notes_by_tag #meeting 
-    Пошук за текстом: search_notes_by_text Meeting with John Doe at 2 PM 
-    Редагувати нотатку за номером: edit_note 1 Updated meeting with John Doe at 3 PM 
-    Видалити нотатку за номером: delete_note 1 
-    Отримати список усіх нотаток: get_all_notes 
-    "good bye", "close", "exit" по будь-якій з цих команд бот завершує свою роботу після того, як виведе у консоль 
-    "Good bye!" '''
+    {P}{B}Додати замітку:{RES} {G}{B}add_note Meeting with John Doe at 2 PM #meeting #important{RES} 
+    {P}{B}Пошук за тегами:{RES} {G}{B}search_notes_by_tag #meeting{RES} 
+    {P}{B}Пошук за текстом:{RES} {G}{B}search_notes_by_text Meeting with John Doe at 2 PM{RES} 
+    {P}{B}Редагувати нотатку за номером:{RES} {G}{B}edit_note 1 Updated meeting with John Doe at 3 PM{RES} 
+    {P}{B}Видалити нотатку за номером:{RES} {G}{B}delete_note 1{RES} 
+    {P}{B}Отримати список усіх нотаток:{RES} {G}{B}get_all_notes{RES} 
+    "{G}{B}good bye{RES}", "{G}{B}close{RES}", "{G}{B}exit{RES}" {P}{B}по будь-якій з цих команд бот завершує свою 
+    роботу після того, як виведе у консоль{RES} 
+    "{G}{B}Good bye!{RES}" '''
+
 
 
 def main():
