@@ -2,6 +2,7 @@ from collections import UserDict
 import pickle
 from prettytable import PrettyTable
 from pathlib import Path
+from termcolor import colored, cprint
 
 
 class NoteName:
@@ -109,9 +110,10 @@ def wrapper(funk):
 
 
 def add_note(*args):
-    title = NoteName(input('Введіть назву нотатку >>> '))
+    title = NoteName(input("\033[3m\033[32m{}".format('Введіть назву нотатку >>> ')))
     if title.value in NOTEBOOK.data:
-        print(f'Нотаток "{title.value}" вже існує. Виберыть іншу назву для нотатка!!!')
+        print(
+            "\033[3m\033[31m{}\033[0m".format(f'Нотаток "{title.value}" вже існує. Виберыть іншу назву для нотатка!!!'))
     else:
         note = input('Введіть текст нотатку >>> ')
         tag = Tag(input('Введіть тег >>> '))
@@ -125,46 +127,47 @@ def add_note(*args):
         if note_rec.title.value not in NOTEBOOK.data:
             NOTEBOOK.add_record(note_rec)
 
-        print(f'Нотаток "{note_rec.title.value}" додано до книги нотатків :)')
+        print(
+            "\033[3m\033[33m{}\033[0m".format(f'Нотаток "{note_rec.title.value}" успішно додано до книги нотатків :)'))
 
 
 def change_note(*args):
-    title = NoteName(input('Введіть назву нотатку, який треба змінити >>> '))
+    title = NoteName(input("\033[3m\033[32m{}".format(f'Введіть назву нотатку, який треба змінити >>> ')))
     if title.value in NOTEBOOK.data:
         note = input('Введіть текст нотатку >>> ')
         NOTEBOOK.data[title.value].add_note(Note(note))
-        print(f'Нотаток "{title.value}" успішно змінено :)')
+        print("\033[3m\033[33m{}\033[0m".format(f'Нотаток "{title.value}" успішно змінено :)'))
     else:
-        print(f'Нотатка "{title}" не знайдено!!!')
+        print("\033[3m\033[31m{}\033[0m".format(f'Нотатка "{title}" не знайдено!!!'))
 
 
 def add_tag(*args):
-    title = NoteName(input('Введіть назву нотатка до якого треба додати ТЕГ >>> '))
+    title = NoteName(input("\033[3m\033[32m{}".format('Введіть назву нотатка до якого треба додати ТЕГ >>> ')))
     if title.value in NOTEBOOK.data:
         tag = Tag(input('Введіть ТЕГ >>> '))
         tag_list = [i.value for i in NOTEBOOK.data[title.value].tags]
         if tag.value not in tag_list:
             NOTEBOOK.data[title.value].add_tag(tag)
-            print(f'ТЕГ "{tag.value}" успішно додано до списку тегів :)')
+            print("\033[3m\033[33m{}\033[0m".format(f'ТЕГ "{tag.value}" успішно додано до списку тегів :)'))
         else:
-            print(f'Tag "{tag.value}" вже є у списку тегів!!!')
+            print("\033[3m\033[31m{}\033[0m".format(f'Tag "{tag.value}" вже є у списку тегів!!!'))
     else:
-        print(f'Нотаток "{title}" не знайдено!!!')
+        print("\033[3m\033[31m{}\033[0m".format(f'Нотаток "{title}" не знайдено!!!'))
 
 
 def del_note(*args):
-    title = NoteName(input('Введіть назву нотатку, який треба видалити >>> '))
+    title = NoteName(input("\033[3m\033[32m{}".format(f'Введіть назву нотатку, який треба видалити >>> ')))
     if title.value in NOTEBOOK.data:
         note = NOTEBOOK.data.pop(title.value)
-        print(f'Нотаток "{title}" успішно видалено :)')
+        print("\033[3m\033[33m{}\033[0m".format(f'Нотаток "{title}" успішно видалено :)'))
     else:
-        print(f'Нотаток "{title}" не знайдено!!!')
+        print("\033[3m\033[31m{}\033[0m".format(f'Нотаток "{title}" не знайдено!!!'))
 
 
 def find_note(*args):
     contact_table = PrettyTable()
     contact_table.field_names = ['Назва нотатку', 'Теги', 'Нотаток']
-    title = NoteName(input('Введіть назву нотатку, який треба знайти >>> '))
+    title = NoteName(input("\033[3m\033[32m{}\033[0m".format('Введіть назву нотатку, який треба знайти >>> ')))
     if title.value in NOTEBOOK.data:
         tags_list = [i.value for i in NOTEBOOK.data[title.value].tags]
         contact_table.add_row([f'{title.value}',
@@ -174,12 +177,13 @@ def find_note(*args):
         contact_table.max_width['Нотаток'] = 100
         print(contact_table)
     else:
-        print(f'Нотаток "{title}" не знайдено!!!')
+        print("\033[3m\033[31m{}\033[0m".format(f'Нотаток "{title}" не знайдено!!!'))
+
 
 def find_by_tag(*args):
     contact_table = PrettyTable()
     contact_table.field_names = ['Назва нотатку', 'Теги', 'Нотаток']
-    tag = Tag(input('Введіть ТЕГ для пошуку нотітків >>> '))
+    tag = Tag(input("\033[3m\033[32m{}\033[0m".format('Введіть ТЕГ для пошуку нотітків >>> ')))
     counter = 0
     for values in NOTEBOOK.data.values():
         tag_list = [i.value for i in values.tags]
@@ -187,13 +191,14 @@ def find_by_tag(*args):
             contact_table.add_row([f'{values.title.value}',
                                    ', '.join(tag_list),
                                    f'{values.note.value}'], divider=True)
-
-            contact_table.max_width['Нотаток'] = 100
-            print(contact_table)
             counter += 1
-    if not counter:
-        print(f'Тегу {tag.value} не знайдено!!!')
 
+    if not counter:
+        print("\033[3m\033[31m{}\033[0m".format(f'Тегу {tag.value} не знайдено!!!'))
+
+    else:
+        contact_table.max_width['Нотаток'] = 100
+        print(contact_table)
 
 
 def show_notes(*args):
@@ -260,9 +265,9 @@ def command_handler(text):
 
 
 def main():
-
-    print('''Привіт!!! Це ваш особистий нотатник!!!
-Якщо ви увійшли в перший раз, введіть 'help' та натисніть Enter для ознайомдення з можливостями додатка :)''')
+    print("\033[1m\033[36m{}".format('Привіт!!! Це ваш особистий нотатник!!!'))
+    print("\033[1m\033[31m{}\033[0m".format(
+        'Якщо ви увійшли в перший раз, введіть "help" та натисніть Enter для ознайомдення з можливостями нотатника :)'))
     flag = True
     while flag:
         user_input = input('>>>')

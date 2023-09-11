@@ -31,7 +31,7 @@ def inf_table():
 
     app_table.max_width['Інформація'] = 60
 
-    print(app_table)
+    print("\033[36m{}\033[0m".format(app_table))
 
 
 def help():
@@ -52,9 +52,9 @@ def help():
 
 
     help_table.align['Список команд та їх фунуціонал'] = 'l'
-    print(help_table)
+    print("\033[32m{}\033[0m".format(help_table))
 
 
 # header_text()
-# inf_table()
-#help()
+inf_table()
+help()
