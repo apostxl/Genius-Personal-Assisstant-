@@ -4,16 +4,31 @@ from colorama import Fore, Style, init
 
 init(autoreset=True)  # Initialize colorama
 
+class InvalidPhoneError(Exception):
+    pass
+
+class MissingNumberError(Exception):
+    pass
+
+class MissingEmailError(Exception):
+    pass
+
 def input_error(func):
     def inner(*args):
         try:
             return func(*args)
+        except InvalidPhoneError:
+            return Fore.RED + 'Phone is not valid'
+        except MissingNumberError:
+            return Fore.RED + "No number"
+        except MissingEmailError:
+            return Fore.RED + "No emails given" 
         except KeyError:
-            return Fore.RED + '\nEnter user name please.\n' + Style.RESET_ALL
+            return Fore.RED + '\nEnter user name please.\n'
         except ValueError:
-            return Fore.RED + '\nSecond argument must be a number.\n' + Style.RESET_ALL
+            return Fore.RED + '\nSecond argument must be a number.\n'
         except IndexError:
-            return Fore.RED + '\nGive me name, phone, email, address, and birthday please.\n' + Style.RESET_ALL
+            return Fore.RED + '\nGive me name, phone, email, address, and birthday please.\n'
     return inner
 
 
@@ -51,13 +66,13 @@ def add(*args):
     birthday = list_of_param[-1]
 
     if not re.match("\+380\(\d{2}\)\d{3}-\d{2}-\d{2}", number):
-        return Fore.RED + 'Phone is not valid'
+        raise InvalidPhoneError
 
     if not number:
-        return Fore.RED + "No number"
+        raise MissingNumberError
     
     if not email:
-        return Fore.RED + "No emails given"
+        raise MissingEmailError
 
     with open('contacts.txt', 'a') as fh:
         fh.write(f'{name}:{number};{email},;{address};{birthday}\n')
