@@ -1,5 +1,8 @@
 from prettytable import PrettyTable
 from colorama import Fore, Style
+import json
+
+
 
 P = Fore.MAGENTA
 B = Style.BRIGHT
@@ -19,6 +22,17 @@ class NoteManager:
         'exit': ['exit', 'close', 'good bye'],
     }
 
+    def save_notes_to_file(self, file_path='notes.json'):
+        with open(file_path, 'w') as file:
+            json.dump([vars(note) for note in self.notes], file, indent=4)
+
+    def load_notes_from_file(self, file_path='notes.json'):
+        try:
+            with open(file_path, 'r') as file:
+                data = json.load(file)
+                self.notes = [self.Note(**note_data) for note_data in data]
+        except FileNotFoundError:
+            self.notes = []
 
     class Note:
         def __init__(self, text, tags=None):
@@ -112,12 +126,12 @@ class NoteManager:
 
     def delete_note_command(self, *args):
         try:
-            index = int(args[0])
-            if 0 <= index < len(self.get_all_notes()):
-                self.delete_note(index)
-                return f"{G}{B}Note {index} deleted successfully{RES}"
+            index = int(args[0]) - 1
+            if 0 <= index < len(note_manager.get_all_notes()):
+                note_manager.delete_note(index)
+                return f"{G}{B}Note {index + 1} deleted successfully{RES}"
             else:
-                return f"{T}{B}Note not found with index {index}{RES}"
+                return f"{T}{B}Note not found with index {index + 1}{RES}"
         except (IndexError, ValueError):
             return f"{T}{B}Invalid input. Please provide a valid index.{RES}"
 
@@ -136,6 +150,7 @@ class NoteManager:
         return f'{T}{B}Unknown command, try again{RES}' if isinstance(args, list) else ''
 
     def exit_command(self, *args):
+        self.save_notes_to_file()
         return 'Good Bye'
 
     def command_handler(self, text):
@@ -188,5 +203,6 @@ class NoteManager:
 
 if __name__ == '__main__':
     note_manager = NoteManager()
+    note_manager.load_notes_from_file()
     note_manager.main()
 
