@@ -30,9 +30,9 @@ def main():
         print(f"{Colors.BLUE}1. ContactBook{Colors.RESET}")
         print(f"{Colors.GREEN}2. NoteBook{Colors.RESET}")
         print(f"{Colors.YELLOW}3. FileSorter{Colors.RESET}")
-        print(f"{Colors.MAGENTA}5. CryptoPrice{Colors.RESET}")
-        print(f"{Colors.CYAN}6. WebSearch{Colors.RESET}")
-        print(f"{Colors.RED}7. Exit{Colors.RESET}")
+        print(f"{Colors.MAGENTA}4. CryptoPrice{Colors.RESET}")
+        print(f"{Colors.CYAN}5. WebSearch{Colors.RESET}")
+        print(f"{Colors.RED}6. Exit{Colors.RESET}")
 
         user_input = input("Enter command number: ")
         if user_input == '1':
@@ -44,12 +44,10 @@ def main():
             filesorter = FileSorter(target_folder)
             filesorter.run()
         elif user_input == '4':
-            notebook.main()
-        elif user_input == '5':
             cryptoprice.display_crypto_prices()
-        elif user_input == '6':
+        elif user_input == '5':
             search_in_browser()
-        elif user_input == '7':
+        elif user_input == '6':
             print(f"{Colors.RED}Goodbye!{Colors.RESET}")
             break
         else:
