@@ -31,14 +31,13 @@ class FileSorter:
 
     def handle_file(self, file_path):
         file_name = os.path.basename(file_path)
-        mime, _ = mimetypes.guess_type(file_name)
         extension = os.path.splitext(file_name)[1].lower()
 
-        if mime and mime.startswith('image'):
+        if extension in self.image_extensions:
             folder_name = 'images'
-        elif mime and mime.startswith('video'):
+        elif extension in self.video_extensions:
             folder_name = 'video'
-        elif mime and mime.startswith('audio'):
+        elif extension in self.audio_extensions:
             folder_name = 'audio'
         elif extension in self.document_extensions:
             folder_name = 'documents'
