@@ -1,4 +1,6 @@
 ## Документація 
+![image](https://github.com/apostxl/Genius-Personal-Assisstant-/assets/116919359/758df949-de08-48d0-928b-60396c6dc63e)
+
 ### Головне меню
 #### Команди:
 
